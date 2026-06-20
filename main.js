@@ -6,7 +6,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const cursor = document.querySelector('.hero-content h1 span.cursor');
   let hasEnded = false;
 
-  if (video) {
+  // Detect mobile view (screen width <= 768px)
+  const isMobile = window.matchMedia('(max-width: 768px)').matches;
+
+  if (video && !isMobile) {
+    // Dynamically assign source only on desktop to prevent mobile from loading the video
+    video.src = 'assets/hero.mp4';
+    video.load();
+
     // Freeze video on the last frame and show cursor
     video.addEventListener('ended', () => {
       hasEnded = true;
@@ -58,6 +65,9 @@ document.addEventListener('DOMContentLoaded', () => {
         cursor.style.animation = 'none';
       }
     }
+  } else if (video && isMobile) {
+    // Remove video completely on mobile to save performance and memory
+    video.remove();
   }
 
   /* ==========================================================================

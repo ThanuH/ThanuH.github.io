@@ -712,7 +712,9 @@ a {
 }
 
 .achievement-sport span.icon {
-  font-size: 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .achievement-details {
@@ -733,6 +735,70 @@ a {
 .achievement-details li strong {
   color: var(--text-primary);
   font-weight: 500;
+}
+
+/* ==========================================================================
+   BEYOND THE CODE SECTION
+   ========================================================================== */
+.beyond-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  margin-top: 2rem;
+}
+
+.beyond-category {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  padding: 3rem;
+  border-radius: 8px;
+  transition: border-color 0.3s ease, transform 0.3s ease;
+}
+
+.beyond-category:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.beyond-category-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 1.25rem;
+}
+
+.beyond-category-header h3 {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.beyond-category-header .icon {
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+}
+
+.beyond-items {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.beyond-item h4 {
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.beyond-item p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.6;
 }
 
 /* ==========================================================================
@@ -951,6 +1017,11 @@ footer {
     gap: 4rem;
   }
   
+  .beyond-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+  
   .achievement-row {
     grid-template-columns: 1fr;
     gap: 1rem;
@@ -962,6 +1033,17 @@ footer {
   
   section {
     padding: 6rem 0;
+  }
+}
+
+@media (max-width: 768px) {
+  #hero-video {
+    display: none !important;
+  }
+  #hero {
+    background-image: url('assets/hero-poster-mobile.jpg');
+    background-size: cover;
+    background-position: center;
   }
 }
 
@@ -997,6 +1079,10 @@ footer {
   
   .project-card {
     padding: 2rem 1.5rem;
+  }
+  
+  .beyond-category {
+    padding: 2.5rem 2rem;
   }
   
   .achievement-row {
