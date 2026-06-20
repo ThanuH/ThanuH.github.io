@@ -3,26 +3,115 @@ document.addEventListener('DOMContentLoaded', () => {
      HERO VIDEO & CURSOR BEHAVIOR
      ========================================================================== */
   const video = document.getElementById('hero-video');
-  const cursor = document.querySelector('.hero-content h1 span.cursor');
+  const loader = document.getElementById('loader');
+  
+  const eyebrowEl = document.querySelector('.hero-content .eyebrow');
+  const headingEl = document.querySelector('.hero-content h1');
+  const taglineEl = document.querySelector('.hero-content .tagline');
+
+  // Keep original texts to type out
+  const eyebrowText = eyebrowEl ? eyebrowEl.textContent.trim() : "Software Engineer";
+  const taglineText = taglineEl ? taglineEl.textContent.trim() : "Java · Spring Boot · Fintech Solutions";
+  const line1Text = "Thanuja";
+  const line2Text = "Lakshitha";
+
+  // Initially clear text content to prepare for typing effect
+  if (eyebrowEl) eyebrowEl.textContent = '';
+  if (headingEl) headingEl.innerHTML = '';
+  if (taglineEl) taglineEl.textContent = '';
+
   let hasEnded = false;
+  let loaderHidden = false;
 
   // Detect mobile view (screen width <= 768px)
   const isMobile = window.matchMedia('(max-width: 768px)').matches;
+
+  const typeText = (element, text, speed, callback) => {
+    let index = 0;
+    const interval = setInterval(() => {
+      if (index < text.length) {
+        element.textContent += text.charAt(index);
+        index++;
+      } else {
+        clearInterval(interval);
+        if (callback) callback();
+      }
+    }, speed);
+  };
+
+  const typeHeading = (element, line1, line2, speed, callback) => {
+    let index = 0;
+    const fullText = line1 + "\n" + line2;
+    let currentHTML = "";
+    const interval = setInterval(() => {
+      if (index < fullText.length) {
+        const char = fullText.charAt(index);
+        if (char === "\n") {
+          currentHTML += "<br>";
+        } else {
+          currentHTML += char;
+        }
+        element.innerHTML = currentHTML + '<span class="cursor">_</span>';
+        index++;
+      } else {
+        clearInterval(interval);
+        if (callback) callback();
+      }
+    }, speed);
+  };
+
+  const startTyping = () => {
+    if (eyebrowEl) {
+      typeText(eyebrowEl, eyebrowText, 40, () => {
+        if (headingEl) {
+          typeHeading(headingEl, line1Text, line2Text, 70, () => {
+            if (taglineEl) {
+              typeText(taglineEl, taglineText, 30, () => {
+                // Keep cursor blinking after typing finishes
+                const finalCursor = headingEl.querySelector('span.cursor');
+                if (finalCursor) {
+                  finalCursor.style.animation = 'blink 1s step-end infinite';
+                }
+              });
+            }
+          });
+        }
+      });
+    }
+  };
+
+  const hideLoader = () => {
+    if (loaderHidden) return;
+    loaderHidden = true;
+    if (loader) {
+      loader.classList.add('fade-out');
+      // Start typing animation after the loader fade-out transition (600ms)
+      setTimeout(startTyping, 600);
+    } else {
+      startTyping();
+    }
+  };
 
   if (video && !isMobile) {
     // Dynamically assign source only on desktop to prevent mobile from loading the video
     video.src = 'assets/hero.mp4';
     video.load();
 
-    // Freeze video on the last frame and show cursor
+    // Hide loader once video starts playing
+    if (video.readyState >= 3) {
+      hideLoader();
+    } else {
+      video.addEventListener('canplaythrough', hideLoader);
+      video.addEventListener('loadeddata', hideLoader);
+      // Fallback timeout in case video loading is slow/blocked
+      setTimeout(hideLoader, 4000);
+    }
+
+    // Freeze video on the last frame
     video.addEventListener('ended', () => {
       hasEnded = true;
       video.currentTime = Math.max(0, video.duration - 0.001);
       video.pause();
-      if (cursor) {
-        cursor.style.opacity = '1';
-        cursor.style.animation = 'blink 1s step-end infinite';
-      }
     });
 
     // Prevent video from restarting if it already ended
@@ -30,11 +119,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (hasEnded) {
         video.pause();
         video.currentTime = Math.max(0, video.duration - 0.001);
-      } else {
-        if (cursor) {
-          cursor.style.opacity = '0';
-          cursor.style.animation = 'none';
-        }
       }
     });
 
@@ -58,16 +142,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     videoObserver.observe(video);
 
-    // Fallback: If video is already playing, hide cursor
-    if (!video.paused && !hasEnded) {
-      if (cursor) {
-        cursor.style.opacity = '0';
-        cursor.style.animation = 'none';
-      }
-    }
-  } else if (video && isMobile) {
-    // Remove video completely on mobile to save performance and memory
-    video.remove();
+  } else {
+    // If mobile or no video, remove video completely to save performance and memory
+    if (video) video.remove();
+    // Hide loader on window load
+    window.addEventListener('load', hideLoader);
+    // Fallback timeout
+    setTimeout(hideLoader, 1500);
   }
 
   /* ==========================================================================
