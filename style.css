@@ -1214,12 +1214,8 @@ footer {
 
 @media (max-width: 768px) {
   #hero-video {
-    display: none !important;
-  }
-  #hero {
-    background-image: url('assets/hero-poster-mobile.jpg');
-    background-size: cover;
-    background-position: center;
+    display: block;
+    object-fit: cover;
   }
 }
 

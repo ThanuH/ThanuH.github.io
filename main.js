@@ -143,12 +143,42 @@ document.addEventListener('DOMContentLoaded', () => {
     videoObserver.observe(video);
 
   } else {
-    // If mobile or no video, remove video completely to save performance and memory
-    if (video) video.remove();
-    // Hide loader on window load
-    window.addEventListener('load', hideLoader);
-    // Fallback timeout
-    setTimeout(hideLoader, 1500);
+    console.log('Mobile view detected');
+    if (video) {
+      console.log('Setting mobile video source');
+      video.src = 'assets/mobile.mp4';
+      video.poster = 'assets/mobile-view.png';
+      video.load();
+    }
+    // Hide loader once mobile video is ready and start playback
+    if (video && video.readyState >= 3) {
+      console.log('Mobile video ready, hiding loader and playing');
+      hideLoader();
+      video.play().catch(err => console.log('Autoplay prevented:', err));
+    } else if (video) {
+      console.log('Waiting for mobile video events');
+      video.addEventListener('canplaythrough', () => {
+        console.log('Mobile video canplaythrough');
+        hideLoader();
+        video.play().catch(err => console.log('Autoplay prevented:', err));
+      });
+      video.addEventListener('loadeddata', () => {
+        console.log('Mobile video loadeddata');
+        hideLoader();
+        video.play().catch(err => console.log('Autoplay prevented:', err));
+      });
+      // Fallback timeout
+      setTimeout(() => {
+        console.log('Mobile video fallback timeout');
+        hideLoader();
+        video.play().catch(err => console.log('Autoplay prevented:', err));
+      }, 4000);
+    } else {
+      // No video element fallback
+      console.log('No video element fallback');
+      window.addEventListener('load', hideLoader);
+      setTimeout(hideLoader, 1500);
+    }
   }
 
   /* ==========================================================================
