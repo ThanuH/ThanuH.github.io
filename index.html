@@ -22,7 +22,42 @@
   <!-- Page Loader -->
   <div id="loader" aria-hidden="true">
     <div class="loader-content">
-      <div class="spinner"></div>
+      <div class="eye-wrapper">
+        <svg class="all-seeing-eye" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Outer Triangle -->
+          <polygon class="eye-triangle" points="50,14 88,80 12,80" stroke="var(--accent)" stroke-width="2" fill="none" stroke-linejoin="round" />
+          
+          <!-- HUD / Tech Reticle -->
+          <circle class="eye-hud" cx="50" cy="52" r="18" stroke="var(--accent)" stroke-width="1" stroke-dasharray="3 6" opacity="0.6" />
+          <circle class="eye-hud-outer" cx="50" cy="52" r="22" stroke="var(--accent)" stroke-width="0.5" stroke-dasharray="10 30" opacity="0.4" />
+          
+          <!-- Radiating Light Rays -->
+          <g class="eye-rays">
+            <line x1="50" y1="12" x2="50" y2="2" stroke="var(--accent)" stroke-width="1.5" opacity="0.5" />
+            <line x1="88" y1="80" x2="98" y2="88" stroke="var(--accent)" stroke-width="1.5" opacity="0.5" />
+            <line x1="12" y1="80" x2="2" y2="88" stroke="var(--accent)" stroke-width="1.5" opacity="0.5" />
+          </g>
+          
+          <!-- Eye Group (eyelids and iris/pupil) -->
+          <g class="eye-ball">
+            <!-- Upper Eyelid -->
+            <path class="eyelid-upper" d="M28,52 Q50,32 72,52" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" fill="none" />
+            
+            <!-- Lower Eyelid -->
+            <path class="eyelid-lower" d="M28,52 Q50,72 72,52" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" fill="none" />
+            
+            <!-- Iris and Pupil Group -->
+            <g class="eye-iris-group">
+              <!-- Iris -->
+              <circle class="eye-iris" cx="50" cy="52" r="8" stroke="var(--accent)" stroke-width="1.5" fill="none" />
+              <!-- Pupil -->
+              <circle class="eye-pupil" cx="50" cy="52" r="4" fill="var(--accent)" />
+              <!-- Glint -->
+              <circle class="eye-glint" cx="52" cy="50" r="1" fill="#FFFFFF" />
+            </g>
+          </g>
+        </svg>
+      </div>
       <div class="loader-logo">THANUJA<span>_</span></div>
     </div>
   </div>
