@@ -81,7 +81,15 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const hideLoader = () => {
-    return; // Temporarily disabled for visual inspection
+    if (loaderHidden) return;
+    loaderHidden = true;
+    if (loader) {
+      loader.classList.add('fade-out');
+      // Start typing animation after the loader fade-out transition (600ms)
+      setTimeout(startTyping, 600);
+    } else {
+      startTyping();
+    }
   };
 
   if (video && !isMobile) {
