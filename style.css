@@ -370,6 +370,7 @@ a {
   justify-content: space-between;
   align-items: center;
   width: 100%;
+  max-width: 100%; /* Override .container max-width to allow logo to go to far left */
 }
 
 .nav-logo {
@@ -378,6 +379,8 @@ a {
   font-weight: 700;
   color: var(--text-primary);
   letter-spacing: -0.05em;
+  flex-shrink: 0;
+  margin-right: auto; /* Pushes the ul to the right */
 }
 
 .nav-logo span {
@@ -388,17 +391,18 @@ a {
 #nav ul {
   display: flex;
   list-style: none;
-  gap: 2rem;
+  gap: 1rem;
 }
 
 #nav ul li a {
   font-family: var(--font-display);
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   font-weight: 500;
   color: var(--text-primary);
   letter-spacing: -0.02em;
   opacity: 0.85;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+  white-space: nowrap;
 }
 
 #nav ul li a:hover,
