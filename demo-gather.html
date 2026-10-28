@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Point Cloud Video Demo - Gather / Scatter Effect</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background: #090a0f;
+      color: #e0e6ed;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+      user-select: none;
+    }
+    #canvas-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+    
+    /* Overlay HUD */
+    .hud {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 10;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 30px;
+    }
+
+    .header {
+      pointer-events: auto;
+      max-width: 480px;
+      backdrop-filter: blur(12px);
+      background: rgba(15, 20, 30, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 20px 24px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #38bdf8;
+      background: rgba(56, 189, 248, 0.12);
+      padding: 4px 10px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-size: 22px;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 6px;
+    }
+
+    p.subtitle {
+      font-size: 13px;
+      color: #94a3b8;
+      line-height: 1.5;
+    }
+
+    /* Controls Panel */
+    .controls-panel {
+      pointer-events: auto;
+      align-self: center;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      backdrop-filter: blur(16px);
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 50px;
+      padding: 10px 18px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+    }
+
+    .btn {
+      background: linear-gradient(135deg, #0284c7, #2563eb);
+      color: #fff;
+      border: none;
+      outline: none;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      padding: 10px 22px;
+      border-radius: 30px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 16px rgba(37, 99, 235, 0.35);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 22px rgba(37, 99, 235, 0.55);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: none;
+      color: #cbd5e1;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+    }
+
+    .slider-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #94a3b8;
+      padding: 0 8px;
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 80px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+      outline: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #38bdf8;
+      cursor: pointer;
+    }
+
+    /* Video status pill */
+    .status-pill {
+      font-size: 12px;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 8px #22c55e;
+    }
+
+    /* File input hidden */
+    #fileInput {
+      display: none;
+    }
+
+    /* Hint text */
+    .hint {
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.4);
+      letter-spacing: 0.5px;
+      pointer-events: none;
+    }
+
+    /* Hidden video element */
+    #sourceVideo {
+      display: none;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+</head>
+<body>
+
+  <!-- Background 3D Viewport -->
+  <div id="canvas-container"></div>
+
+  <!-- Video Element -->
+  <video id="sourceVideo" src="assets/hero.mp4" autoplay loop muted playsinline crossOrigin="anonymous"></video>
+  <input type="file" id="fileInput" accept="video/*,image/*">
+
+  <!-- HUD Overlay -->
+  <div class="hud">
+    <div class="header">
+      <span class="badge">3D Point Cloud VFX</span>
+      <h1>hero.mp4 Gather & Scatter</h1>
+      <p class="subtitle">Live GPU video pixel displacement. Move mouse across particles to interact; click <b>Scatter / Gather</b> to disperse into 3D space.</p>
+    </div>
+
+    <div class="controls-panel">
+      <button class="btn" id="toggleBtn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+        <span id="btnText">Scatter Particles</span>
+      </button>
+
+      <button class="btn btn-secondary" id="playBtn">Pause</button>
+
+      <div class="slider-group">
+        <span>Depth:</span>
+        <input type="range" id="depthSlider" min="0" max="80" value="38">
+      </div>
+
+      <button class="btn btn-secondary" onclick="document.getElementById('fileInput').click()">
+        Upload File
+      </button>
+
+      <div class="status-pill">
+        <span class="status-dot"></span>
+        <span id="videoStatus">Playing</span>
+      </div>
+    </div>
+
+    <div class="hint">Move mouse to repel particles &bull; Drag to tilt 3D angle</div>
+  </div>
+
+  <script>
+    // --- Scene Setup ---
+    const container = document.getElementById('canvas-container');
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2(0x090a0f, 0.0018);
+
+    const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 1500);
+    camera.position.set(0, 0, 260);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: "high-performance" });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setClearColor(0x090a0f, 1.0);
+    container.appendChild(renderer.domElement);
+
+    // --- Video Texture Setup ---
+    const video = document.getElementById('sourceVideo');
+    let videoTexture = new THREE.VideoTexture(video);
+    videoTexture.minFilter = THREE.LinearFilter;
+    videoTexture.magFilter = THREE.LinearFilter;
+    videoTexture.format = THREE.RGBAFormat;
+
+    // --- Shader Logic ---
+    const vertexShader = `
+      uniform sampler2D uVideoTexture;
+      uniform float uProgress;
+      uniform float uTime;
+      uniform vec2 uMouse;
+      uniform float uMouseRadius;
+      uniform float uDepthScale;
+      uniform float uPointSize;
+
+      attribute vec2 aUv;
+      attribute vec3 aScatter;
+      attribute vec3 aRandom;
+
+      varying vec3 vColor;
+      varying float vAlpha;
+
+      void main() {
+        // Sample current live video frame
+        vec4 texColor = texture2D(uVideoTexture, aUv);
+        vColor = texColor.rgb;
+
+        // Depth derived from brightness (standard luminance formula)
+        float luminance = dot(texColor.rgb, vec3(0.299, 0.587, 0.114));
+
+        // 1. Gathered Position (Origin: flat grid with luminance Z-depth)
+        vec3 gatheredPos = vec3(position.xy, luminance * uDepthScale);
+
+        // 2. Floating 3D ambient drift (like dust in light)
+        vec3 drift = vec3(
+          sin(uTime * 1.4 + aRandom.x * 6.28) * 4.0,
+          cos(uTime * 1.1 + aRandom.y * 6.28) * 4.0,
+          sin(uTime * 1.7 + aRandom.z * 6.28) * 6.0
+        );
+
+        // 3. Scattered Position (Spherical expansion + noise)
+        vec3 scatteredPos = aScatter + drift * 4.0;
+
+        // 4. Interpolate between Gathered and Scattered states
+        vec3 pos = mix(gatheredPos, scatteredPos, uProgress);
+
+        // 5. Interactive Mouse Repulsion in 3D
+        float distToMouse = distance(pos.xy, uMouse);
+        if (distToMouse < uMouseRadius) {
+          float force = (1.0 - distToMouse / uMouseRadius);
+          vec2 pushDir = normalize(pos.xy - uMouse);
+          pos.xy += pushDir * force * 45.0;
+          pos.z += force * 55.0;
+        }
+
+        vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
+        gl_PointSize = (uPointSize * (280.0 / -mvPosition.z));
+        gl_Position = projectionMatrix * mvPosition;
+
+        // Soft visibility threshold for dark video background
+        vAlpha = smoothstep(0.01, 0.12, luminance) * 0.95 + 0.05;
+      }
+    `;
+
+    const fragmentShader = `
+      varying vec3 vColor;
+      varying float vAlpha;
+
+      void main() {
+        // Circular particle with smooth falloff
+        float dist = length(gl_PointCoord - vec2(0.5));
+        if (dist > 0.5) discard;
+
+        float edge = smoothstep(0.5, 0.18, dist);
+        gl_FragColor = vec4(vColor, vAlpha * edge);
+      }
+    `;
+
+    const uniforms = {
+      uVideoTexture: { value: videoTexture },
+      uProgress: { value: 0.0 },
+      uTime: { value: 0.0 },
+      uMouse: { value: new THREE.Vector2(-9999, -9999) },
+      uMouseRadius: { value: 45.0 },
+      uDepthScale: { value: 38.0 },
+      uPointSize: { value: 2.2 }
+    };
+
+    let particleMesh = null;
+
+    // --- Build Particle Grid ---
+    function initPointCloud(aspectRatio = 16 / 9) {
+      if (particleMesh) {
+        scene.remove(particleMesh);
+        particleMesh.geometry.dispose();
+      }
+
+      // Grid dimensions (approx 16,000 points - optimal for 60fps)
+      const cols = 170;
+      const rows = Math.round(cols / aspectRatio);
+
+      const positions = [];
+      const uvs = [];
+      const scatters = [];
+      const randoms = [];
+
+      const planeWidth = 220;
+      const planeHeight = planeWidth / aspectRatio;
+
+      for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+          const u = x / (cols - 1);
+          const v = 1.0 - (y / (rows - 1)); // Inverted for video texture alignment
+
+          const posX = (u - 0.5) * planeWidth;
+          const posY = (v - 0.5) * planeHeight;
+          positions.push(posX, posY, 0.0);
+          uvs.push(u, v);
+
+          // 3D Spherical explosion field for scattering
+          const theta = Math.random() * Math.PI * 2;
+          const phi = Math.acos(Math.random() * 2 - 1);
+          const radius = 90 + Math.random() * 160;
+          scatters.push(
+            radius * Math.sin(phi) * Math.cos(theta),
+            radius * Math.sin(phi) * Math.sin(theta),
+            radius * Math.cos(phi)
+          );
+
+          randoms.push(Math.random(), Math.random(), Math.random());
+        }
+      }
+
+      const geometry = new THREE.BufferGeometry();
+      geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+      geometry.setAttribute('aUv', new THREE.Float32BufferAttribute(uvs, 2));
+      geometry.setAttribute('aScatter', new THREE.Float32BufferAttribute(scatters, 3));
+      geometry.setAttribute('aRandom', new THREE.Float32BufferAttribute(randoms, 3));
+
+      const material = new THREE.ShaderMaterial({
+        vertexShader,
+        fragmentShader,
+        uniforms,
+        transparent: true,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending
+      });
+
+      particleMesh = new THREE.Points(geometry, material);
+      scene.add(particleMesh);
+    }
+
+    initPointCloud(16 / 9);
+
+    // --- Video Ready Listener ---
+    function handleVideoReady() {
+      if (video.videoWidth && video.videoHeight) {
+        const aspect = video.videoWidth / video.videoHeight;
+        initPointCloud(aspect);
+      }
+      video.play().catch(() => {
+        document.getElementById('videoStatus').textContent = 'Click to Play';
+      });
+    }
+
+    video.addEventListener('loadedmetadata', handleVideoReady);
+    if (video.readyState >= 1) handleVideoReady();
+
+    // --- Interactive Controls ---
+    let isScattered = false;
+    const toggleBtn = document.getElementById('toggleBtn');
+    const btnText = document.getElementById('btnText');
+
+    toggleBtn.addEventListener('click', () => {
+      isScattered = !isScattered;
+      btnText.textContent = isScattered ? 'Gather Particles' : 'Scatter Particles';
+
+      gsap.to(uniforms.uProgress, {
+        value: isScattered ? 1.0 : 0.0,
+        duration: 2.2,
+        ease: "power3.inOut"
+      });
+    });
+
+    // Play / Pause
+    const playBtn = document.getElementById('playBtn');
+    playBtn.addEventListener('click', () => {
+      if (video.paused) {
+        video.play();
+        playBtn.textContent = 'Pause';
+        document.getElementById('videoStatus').textContent = 'Playing';
+      } else {
+        video.pause();
+        playBtn.textContent = 'Play';
+        document.getElementById('videoStatus').textContent = 'Paused';
+      }
+    });
+
+    // Depth slider
+    const depthSlider = document.getElementById('depthSlider');
+    depthSlider.addEventListener('input', (e) => {
+      uniforms.uDepthScale.value = parseFloat(e.target.value);
+    });
+
+    // Custom File Upload (Allows user to test any local video or image without CORS)
+    const fileInput = document.getElementById('fileInput');
+    fileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const url = URL.createObjectURL(file);
+        video.src = url;
+        video.load();
+        video.play();
+        playBtn.textContent = 'Pause';
+      }
+    });
+
+    // --- Mouse Interaction & Parallax ---
+    const raycaster = new THREE.Raycaster();
+    const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+    const mousePos2D = new THREE.Vector2();
+    let targetRotationX = 0;
+    let targetRotationY = 0;
+
+    window.addEventListener('mousemove', (e) => {
+      mousePos2D.x = (e.clientX / window.innerWidth) * 2 - 1;
+      mousePos2D.y = -(e.clientY / window.innerHeight) * 2 + 1;
+
+      // Unproject to world coordinates on the Z=0 plane
+      raycaster.setFromCamera(mousePos2D, camera);
+      const intersection = new THREE.Vector3();
+      raycaster.ray.intersectPlane(plane, intersection);
+
+      if (intersection) {
+        uniforms.uMouse.value.set(intersection.x, intersection.y);
+      }
+
+      // Parallax rotation
+      targetRotationY = mousePos2D.x * 0.18;
+      targetRotationX = -mousePos2D.y * 0.14;
+    });
+
+    window.addEventListener('mouseleave', () => {
+      uniforms.uMouse.value.set(-9999, -9999);
+      targetRotationX = 0;
+      targetRotationY = 0;
+    });
+
+    // --- Render Loop ---
+    const clock = new THREE.Clock();
+    function animate() {
+      requestAnimationFrame(animate);
+
+      const elapsedTime = clock.getElapsedTime();
+      uniforms.uTime.value = elapsedTime;
+
+      // Smooth camera tilt follow
+      scene.rotation.y += (targetRotationY - scene.rotation.y) * 0.05;
+      scene.rotation.x += (targetRotationX - scene.rotation.x) * 0.05;
+
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    // --- Window Resize ---
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
+</body>
+</html>

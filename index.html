@@ -5,16 +5,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description"
-    content="Portfolio of Thanuja Lakshitha Hennayake — Software Engineer specializing in backend systems, Java, Spring Boot, Fintech, and Cloud solutions.">
+    content="Portfolio of Thanuja Lakshitha Hennayake — Software Engineer specializing in backend systems, Java, Spring Boot, Fintech & Digital Banking platforms, and Cloud & DevOps solutions (GCP, Kubernetes, Istio).">
   <meta name="keywords"
-    content="Thanuja Lakshitha, Thanuja Hennayake, Software Engineer, Backend Developer, Java, Spring Boot, Fintech, Cloud, GCP, DevOps, Archery Champion">
+    content="Thanuja Lakshitha, Thanuja Hennayake, Software Engineer, Backend Developer, Java, Spring Boot, Fintech, KHQR, Digital Banking, Microservices, Cloud, GCP, Kubernetes, Istio, DevOps, University of Westminster">
   <meta name="author" content="Thanuja Lakshitha Hennayake">
 
   <title>Thanuja Lakshitha | Software Engineer</title>
 
   <link rel="icon"
     href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%230A0A0A%22/><text x=%2215%22 y=%2270%22 font-family=%22monospace%22 font-size=%2260%22 fill=%22%234ADE80%22 font-weight=%22bold%22>TH</text></svg>">
-  <link rel="stylesheet" href="style.css?v=1.1">
+  <link rel="stylesheet" href="style.css?v=1.2">
 </head>
 
 <body>
@@ -86,7 +86,7 @@
        HERO SECTION
        ========================================================================== -->
   <section id="hero" aria-label="Hero Banner">
-    <video id="hero-video" src="assets/mobile.mp4" poster="assets/mobile-view.png" autoplay muted playsinline preload="metadata">
+    <video id="hero-video" poster="assets/hero-poster.webp" autoplay muted playsinline preload="metadata">
       Your browser does not support the video tag.
     </video>
 
@@ -94,7 +94,7 @@
       <div class="hero-content">
         <p class="eyebrow">Software Engineer</p>
         <h1>Thanuja<br>Lakshitha<span class="cursor">_</span></h1>
-        <p class="tagline">Java &middot; Spring Boot &middot; Fintech &amp; Cloud Solutions</p>
+        <p class="tagline">Java &middot; Spring Boot &middot; Fintech &middot; Cloud &amp; DevOps</p>
       </div>
     </div>
 
@@ -107,6 +107,9 @@
     <!-- ==========================================================================
          ABOUT SECTION
          ========================================================================== -->
+    <!-- Background Connected Dots & Constellation Mesh (Active across all sections below hero) -->
+    <canvas id="constellation-canvas" aria-hidden="true"></canvas>
+
     <section id="about" class="reveal">
       <div class="container">
         <span class="section-eyebrow">01 // Profile</span>
@@ -115,17 +118,18 @@
         <div class="about-grid">
           <div class="about-text">
             <p>
-              Software Engineer with 4+ years' experience building backend systems for fintech platforms across Sri Lanka
-              and Cambodia. First Class Honours graduate in Computer Science (University of Westminster).
+              Software Engineer with 4+ years of experience building robust backend systems for fintech and digital banking
+              platforms across Sri Lanka and Cambodia. First Class Honours graduate in Computer Science (University of Westminster)
+              and author of research accepted at the Central Bank of Sri Lanka International Research Conference.
             </p>
             <p>
-              Specializes in Java, Spring Boot, and REST API design, with hands-on experience delivering payment
-              infrastructure, digital lending microservices, and cloud/DevOps deployments on GCP using Kubernetes and
-              Istio.
+              Specialized in Java, Spring Boot, Spring Data JPA, and REST API design, with hands-on experience delivering
+              payment infrastructure, KHQR integrations, digital lending microservices, and real-time fraud risk management (FRM).
             </p>
             <p>
-              Comfortable operating across the stack, from production incident response to system architecture, and
-              adept at using AI-assisted tooling to accelerate development and troubleshooting.
+              Recently led cloud and DevOps deployment on Google Cloud Platform (GCP)—provisioning Kubernetes (GKE) clusters
+              and implementing an Istio service mesh for inter-pod resilience. Experienced in Level-3 production support,
+              incident resolution (including Identity Provider and OAuth2/JWT troubleshooting), and code quality enforcement with SonarQube.
             </p>
             <a href="assets/thanuja-hennayake-cv.pdf" download class="btn"
               aria-label="Download CV of Thanuja Lakshitha Hennayake">
@@ -143,12 +147,12 @@
             <div class="stat-tile">
               <div class="stat-number">4+</div>
               <div class="stat-label">Years of Experience</div>
-              <div class="stat-sub">Fintech, Cloud &amp; custom solutions</div>
+              <div class="stat-sub">Fintech, Digital Banking &amp; Cloud Platforms</div>
             </div>
             <div class="stat-tile">
               <div class="stat-number">BSc</div>
               <div class="stat-label">Computer Science (Hons)</div>
-              <div class="stat-sub">First Class &mdash; University of Westminster</div>
+              <div class="stat-sub">First Class Honours &mdash; University of Westminster</div>
             </div>
           </div>
         </div>
@@ -170,9 +174,10 @@
             <div class="skills-list">
               <span class="badge">Java</span>
               <span class="badge">JavaScript / TypeScript</span>
-              <span class="badge">HTML / CSS</span>
-              <span class="badge">Python (Intermediate)</span>
-              <span class="badge">R (Intermediate)</span>
+              <span class="badge">Python</span>
+              <span class="badge">SQL</span>
+              <span class="badge">HTML5 / CSS3</span>
+              <span class="badge">R</span>
             </div>
           </div>
 
@@ -180,13 +185,15 @@
           <div class="skills-category">
             <h3>Backend &amp; Frameworks</h3>
             <div class="skills-list">
+              <span class="badge">Java (Spring Framework)</span>
               <span class="badge">Spring Boot</span>
               <span class="badge">Spring Data JPA</span>
-              <span class="badge">JSP</span>
-              <span class="badge">WSO2 Services</span>
-              <span class="badge">FastAPI</span>
-              <span class="badge">RESTful API Design</span>
-              <span class="badge">Microservices</span>
+              <span class="badge">Hibernate</span>
+              <span class="badge">JDBC / JAX-RS</span>
+              <span class="badge">RESTful API Design &amp; Client</span>
+              <span class="badge">Microservices &amp; Monolithic</span>
+              <span class="badge">SOAP Web Services</span>
+              <span class="badge">WSO2 EI</span>
             </div>
           </div>
 
@@ -198,7 +205,22 @@
               <span class="badge">Kubernetes (GKE)</span>
               <span class="badge">Istio Service Mesh</span>
               <span class="badge">Docker</span>
-              <span class="badge">CI/CD</span>
+              <span class="badge">CI/CD Pipelines</span>
+              <span class="badge">Git / GitHub / GitLab</span>
+            </div>
+          </div>
+
+          <!-- Identity & Security (IAM) -->
+          <div class="skills-category">
+            <h3>Identity &amp; Security (IAM)</h3>
+            <div class="skills-list">
+              <span class="badge">OAuth 2.0 / OpenID Connect</span>
+              <span class="badge">JWT Authentication</span>
+              <span class="badge">Keycloak (On-Premise IAM)</span>
+              <span class="badge">AWS IAM &amp; Cognito</span>
+              <span class="badge">WSO2 IS</span>
+              <span class="badge">IdP Root-Cause Analysis</span>
+              <span class="badge">SonarQube Code Quality</span>
             </div>
           </div>
 
@@ -206,33 +228,25 @@
           <div class="skills-category">
             <h3>Databases</h3>
             <div class="skills-list">
-              <span class="badge">MySQL</span>
               <span class="badge">PostgreSQL</span>
+              <span class="badge">MySQL</span>
               <span class="badge">Oracle DB</span>
+              <span class="badge">Query Optimization &amp; Indexing</span>
             </div>
           </div>
 
-          <!-- Security & Quality -->
+          <!-- Testing, Tools & Practices -->
           <div class="skills-category">
-            <h3>Security &amp; Quality</h3>
+            <h3>Testing, Tools &amp; Practices</h3>
             <div class="skills-list">
-              <span class="badge">OAuth2 / JWT</span>
-              <span class="badge">IdP Troubleshooting</span>
-              <span class="badge">SonarQube</span>
-              <span class="badge">Application Hardening</span>
-              <span class="badge">JUnit</span>
-            </div>
-          </div>
-
-          <!-- Tools & Practice -->
-          <div class="skills-category">
-            <h3>Tools &amp; Practice</h3>
-            <div class="skills-list">
-              <span class="badge">Git / GitHub</span>
+              <span class="badge">JUnit (Unit &amp; Integration)</span>
+              <span class="badge">OpenAPI / Swagger</span>
               <span class="badge">Postman</span>
-              <span class="badge">Swagger</span>
-              <span class="badge">Agile / Scrum</span>
+              <span class="badge">Maven / Gradle</span>
               <span class="badge">AI-Assisted Development</span>
+              <span class="badge">Time Series Analysis</span>
+              <span class="badge">Agile / Scrum</span>
+              <span class="badge">L3 Production Support</span>
             </div>
           </div>
         </div>
@@ -253,39 +267,31 @@
             <div class="timeline-header">
               <span class="timeline-date">Apr 2026 &ndash; Present</span>
               <h3 class="timeline-role">Software Engineer</h3>
-              <h4 class="timeline-company">iPay Cambodia (Primary) | iPay Sri Lanka (Supporting)</h4>
+              <h4 class="timeline-company">iPay Sri Lanka &bull; Colombo, Sri Lanka</h4>
             </div>
             <div class="timeline-group">
-              <h5 class="timeline-subheading">Cloud & DevOps</h5>
+              <h5 class="timeline-subheading">Cloud &amp; DevOps</h5>
               <ul class="timeline-details">
-                <li>Led the DevOps deployment of a new product on Google Cloud Platform (GCP), provisioning
-                  Kubernetes clusters and workspaces from the ground up.</li>
-                <li>Implemented an Istio service mesh to manage secure, observable inter-pod communication
-                  across microservices.</li>
-                <li>Used AI-assisted development tooling to accelerate infrastructure setup, cluster configuration,
-                  and deployment workflows.</li>
-                <li>Diagnosed and resolved a critical Identity Provider (IdP) authentication outage, using AI-assisted
-                  debugging tools to accelerate root-cause analysis and restore service.</li>
+                <li>Led end-to-end DevOps deployment on <strong>Google Cloud Platform (GCP)</strong>, provisioning Kubernetes (GKE) clusters and workspaces from the ground up.</li>
+                <li>Implemented an <strong>Istio Service Mesh</strong> to establish secure, observable, and resilient inter-pod communication across microservices.</li>
+                <li>Leveraged <strong>AI-assisted development tooling</strong> to accelerate cloud infrastructure setup, cluster configurations, and CI/CD deployment pipelines.</li>
+                <li>Diagnosed and resolved a critical <strong>Identity Provider (IdP)</strong> authentication outage under high pressure, drastically reducing MTTR via AI-assisted root-cause analysis.</li>
               </ul>
             </div>
 
             <div class="timeline-group">
-              <h5 class="timeline-subheading">Fintech & Payment Infrastructure</h5>
+              <h5 class="timeline-subheading">Fintech &amp; Payment Infrastructure</h5>
               <ul class="timeline-details">
-                <li>Designed and developed a cross-border remittance architecture for LOLC Cambodia, implementing
-                  dual-currency (KHR/USD) QR generation and payment processing.</li>
-                <li>Developed deep-link payment integrations enabling merchants to trigger in-app payment
-                  flows directly from external channels, streamlining the customer checkout experience.</li>
+                <li>Designed and built a cross-border remittance architecture for LOLC Cambodia, implementing dual-currency (KHR/USD) QR generation and transaction processing.</li>
+                <li>Developed deep-link payment integrations enabling merchants to trigger frictionless in-app payment workflows directly from external channels.</li>
               </ul>
             </div>
 
             <div class="timeline-group">
-              <h5 class="timeline-subheading">Core Banking, Loans & Governance</h5>
+              <h5 class="timeline-subheading">Code Quality &amp; Governance</h5>
               <ul class="timeline-details">
-                <li>Enforced code quality benchmarks using SonarQube, identifying and resolving structural
-                  vulnerabilities and code smells.</li>
-                <li>Provided production support and incident troubleshooting, maintaining system uptime and
-                  performance.</li>
+                <li>Enforced code quality and static security benchmarks using <strong>SonarQube</strong>, systematically eliminating structural vulnerabilities and code smells.</li>
+                <li>Delivered <strong>Level-3 production support</strong> and root-cause incident troubleshooting to maintain high platform availability and performance.</li>
               </ul>
             </div>
           </div>
@@ -295,33 +301,25 @@
             <div class="timeline-header">
               <span class="timeline-date">Sep 2023 &ndash; Apr 2026</span>
               <h3 class="timeline-role">Associate Software Engineer</h3>
-              <h4 class="timeline-company">iPay Cambodia (Primary) | iPay Sri Lanka (Supporting)</h4>
+              <h4 class="timeline-company">iPay Sri Lanka &bull; Colombo, Sri Lanka</h4>
             </div>
             <div class="timeline-group">
-              <h5 class="timeline-subheading">Fintech & Payment Infrastructure</h5>
+              <h5 class="timeline-subheading">Fintech &amp; Payment Infrastructure</h5>
               <ul class="timeline-details">
-                <li>Integrated the National Bank of Cambodia (NBC) SDK to generate standards-compliant KHQR
-                  codes, streamlining inter-bank mobile transactions.</li>
-                <li>Architected a real-time, rule-based Fraud Risk Management (FRM) system for mobile banking,
-                  mitigating transaction risk through immediate pattern analysis.</li>
-                <li>Led a system migration for iPay Sri Lanka, transitioning core API integrations from legacy SOAP
-                  to high-performance REST services via the mCash switch.</li>
-                <li>Designed, documented (via Swagger), and optimised scalable backend REST APIs supporting
-                  core fintech operations.</li>
+                <li>Integrated the National Bank of Cambodia (NBC) SDK for standards-compliant <strong>KHQR</strong> code generation, enabling seamless inter-bank mobile payments.</li>
+                <li>Architected a real-time, rule-based <strong>Fraud Risk Management (FRM)</strong> engine for mobile banking to mitigate fraudulent activities through instant pattern detection.</li>
+                <li>Directed legacy migration for iPay Sri Lanka, modernizing core integration interfaces from legacy SOAP to high-throughput RESTful services via the mCash switch.</li>
+                <li>Designed, optimized, and documented scalable backend REST APIs using <strong>Swagger/OpenAPI</strong> to support mission-critical banking operations.</li>
               </ul>
             </div>
 
             <div class="timeline-group">
-              <h5 class="timeline-subheading">Core Banking & Loan Services</h5>
+              <h5 class="timeline-subheading">Core Banking, Loans &amp; Digital Journeys</h5>
               <ul class="timeline-details">
-                <li>Engineered and launched digital lending microservices, including Salary Advance Loans and Gold
-                  Financing, for LOLC Cambodia.</li>
-                <li>Overhauled the core payroll module to reliably process 10,000+ monthly transactions using
-                  transactional retries and recovery fallbacks.</li>
-                <li>Led backend development for the customer digital onboarding journey on the LOLC Mobile Cambodia
-                  application.</li>
-                <li>Integrated secure, high-availability third-party services, including SMS gateways, payment
-                  gateways, and Card Management Services (CMS).</li>
+                <li>Engineered digital microservices for high-impact lending products (Salary Advance Loans, Gold Financing) for LOLC Cambodia.</li>
+                <li>Led backend development of the end-to-end customer digital onboarding journey on the LOLC Mobile Cambodia app.</li>
+                <li>Overhauled the core payroll module to reliably process 10,000+ monthly transactions with automated retries and transactional recovery fallbacks.</li>
+                <li>Integrated secure, fault-tolerant third-party systems including SMS gateways, payment aggregators, and Card Management Services (CMS).</li>
               </ul>
             </div>
           </div>
@@ -330,14 +328,14 @@
           <div class="timeline-item">
             <div class="timeline-header">
               <span class="timeline-date">Aug 2022 &ndash; Aug 2023</span>
-              <h3 class="timeline-role">Intern Software Engineer</h3>
-              <h4 class="timeline-company">iPay Cambodia (Primary) | iPay Sri Lanka (Supporting)</h4>
+              <h3 class="timeline-role">Software Engineer Intern</h3>
+              <h4 class="timeline-company">iPay Sri Lanka &bull; Colombo, Sri Lanka</h4>
             </div>
             <ul class="timeline-details">
-              <li>Contributed to QA by designing, tracking, and executing integration and system test plans.</li>
-              <li>Wrote unit and integration test suites using JUnit, improving code reliability and test coverage.</li>
-              <li>Identified and fixed backend anomalies, and resolved SQL query performance bottlenecks.</li>
-              <li>Assisted in Java-based feature development and supported live production releases.</li>
+              <li>Contributed to backend feature engineering using <strong>Java</strong> and participated in bi-weekly production release deployments.</li>
+              <li>Formulated, maintained, and executed unit and integration test suites using <strong>JUnit</strong>, significantly boosting overall test coverage.</li>
+              <li>Identified and resolved backend bugs, investigated data inconsistencies, and optimized slow-running <strong>SQL</strong> queries to boost database response times.</li>
+              <li>Collaborated closely with QA teams to design and execute thorough end-to-end system testing protocols.</li>
             </ul>
           </div>
 
@@ -349,12 +347,9 @@
               <h4 class="timeline-company">Self-Employed</h4>
             </div>
             <ul class="timeline-details">
-              <li>Built custom web and backend applications using Spring Boot, Thymeleaf, and MySQL for small
-                businesses.</li>
-              <li>Designed REST API integrations connecting e-commerce platforms with billing and notification
-                systems.</li>
-              <li>Delivered responsive UIs and branding-focused digital designs, managing client relationships
-                independently.</li>
+              <li>Built custom web and backend applications using Spring Boot, Thymeleaf, and MySQL for small businesses.</li>
+              <li>Designed REST API integrations connecting e-commerce platforms with billing and notification systems.</li>
+              <li>Delivered responsive UIs and branding-focused digital designs, managing client relationships independently.</li>
             </ul>
           </div>
         </div>
